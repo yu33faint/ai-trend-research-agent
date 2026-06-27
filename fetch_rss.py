@@ -3,6 +3,24 @@ import feedparser
 RSS_URL = "https://hnrss.org/newest?q=AI"
 SOURCE_NAME = "Hacker News RSS"
 
+def build_markdown_report(articles):
+  lines = []
+
+  lines.append("# AI Trend Daily Report")
+  lines.append("")
+  lines.append("# 今日のピックアップ")
+  lines.append("")
+
+  for index, article in enumerate(articles, start=1):
+    lines.append(f"### {index}. {article['title']}")
+    lines.append("")
+    lines.append(f"- source: {article['source']}")
+    lines.append(f"- date; {article['published_at']}")
+    lines.append(f"- url: {article['url']}")
+    lines.append("")
+
+  return "\n".join(lines)
+
 def main():
   feed = feedparser.parse(RSS_URL)
   articles = []
@@ -21,12 +39,8 @@ def main():
 
     articles.append(article)
 
-  for index, article in enumerate(articles, start=1):
-    print(f"{index}. {article['title']}")
-    print(f"   source: {article['source']}")
-    print(f"   date: {article['published_at']}")
-    print(f"   url: {article['url']}")
-    print()
+  report = build_markdown_report(articles)
+  print(report)
 
 
 if __name__ == "__main__":
