@@ -38,7 +38,9 @@ def fetch_articles():
                 "title": entry.get("title", "No title"),
                 "url": url,
                 "source": source["name"],
+                "published_at": entry.get("published", "No published date"),
                 "published_datetime": published_datetime,
+                "summary": "要約は未生成です。",
             }
 
             articles.append(article)

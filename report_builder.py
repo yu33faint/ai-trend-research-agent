@@ -10,7 +10,8 @@ def build_markdown_report(articles):
         lines.append(f"### {index}. {article['title']}")
         lines.append("")
         lines.append(f"- source: {article['source']}")
-        lines.append(f"- date: {article['published_datetime']}")
+        lines.append(f"- date: {article['published_at']}")
+        lines.append(f"- summary: {article['summary']}")
         lines.append(f"- url: {article['url']}")
         lines.append("")
 
