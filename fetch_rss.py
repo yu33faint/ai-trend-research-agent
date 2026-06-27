@@ -1,4 +1,6 @@
 import feedparser
+from datetime import date
+from pathlib import Path
 
 RSS_URL = "https://hnrss.org/newest?q=AI"
 SOURCE_NAME = "Hacker News RSS"
@@ -21,6 +23,17 @@ def build_markdown_report(articles):
 
   return "\n".join(lines)
 
+def save_report(report):
+  reports_dir = Path("reports")
+  reports_dir.mkdir(exist_ok=True)
+
+  today = date.today()
+  report_path = reports_dir / f"{today}.md"
+
+  report_path.write_text(report, encoding="utf-8")
+
+  return report_path
+
 def main():
   feed = feedparser.parse(RSS_URL)
   articles = []
@@ -40,8 +53,10 @@ def main():
     articles.append(article)
 
   report = build_markdown_report(articles)
-  print(report)
+  report_path = save_report(report)
 
+  print(report)
+  print(f"Report saved to: {report_path}")
 
 if __name__ == "__main__":
   main()
