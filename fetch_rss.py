@@ -10,6 +10,15 @@ def fetch_articles():
     for source in RSS_SOURCES:
         feed = feedparser.parse(source["url"])
 
+        if feed.bozo:
+            print(f"Failed to parse RSS: {source['name']}")
+            print(feed.bozo_exception)
+            continue
+
+        if not feed.entries:
+            print(f"No entries found: {source['name']}")
+            continue
+
         for entry in feed.entries[:ARTICLES_PER_SOURCE]:
             url = entry.get("link", "No URL")
 
@@ -29,7 +38,7 @@ def fetch_articles():
                 "title": entry.get("title", "No title"),
                 "url": url,
                 "source": source["name"],
-                "published_at": published_datetime,
+                "published_datetime": published_datetime,
             }
 
             articles.append(article)
