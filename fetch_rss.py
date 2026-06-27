@@ -11,6 +11,9 @@ RSS_SOURCES = [
     },
 ]
 
+MAX_ARTICLES = 10
+ARTICLES_PER_SOURCE = 5
+
 def fetch_articles():
     articles = []
     seen_urls = set()
@@ -18,7 +21,7 @@ def fetch_articles():
     for source in RSS_SOURCES:
         feed = feedparser.parse(source["url"])
 
-        for entry in feed.entries[:5]:
+        for entry in feed.entries[:ARTICLES_PER_SOURCE]:
             url = entry.get("link", "No URL")
 
             if url in seen_urls:
@@ -34,5 +37,8 @@ def fetch_articles():
             }
 
             articles.append(article)
+
+            if len(articles) >= MAX_ARTICLES:
+                return articles
 
     return articles
