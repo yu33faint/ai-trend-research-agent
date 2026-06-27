@@ -1,21 +1,30 @@
 import feedparser
 
-RSS_URL = "https://hnrss.org/newest?q=AI"
-SOURCE_NAME = "Hacker News RSS"
-
+RSS_SOURCES = [
+    {
+        "name": "Hacker News RSS",
+        "url": "https://hnrss.org/newest?q=AI",
+    },
+    {
+        "name": "OpenAI Blog",
+        "url": "https://openai.com/blog/rss.xml",
+    },
+]
 
 def fetch_articles():
-    feed = feedparser.parse(RSS_URL)
     articles = []
 
-    for entry in feed.entries[:5]:
-        article = {
-            "title": entry.get("title", "No title"),
-            "url": entry.get("link", "No URL"),
-            "source": SOURCE_NAME,
-            "published_at": entry.get("published", "No published date"),
-        }
+    for source in RSS_SOURCES:
+        feed = feedparser.parse(source["url"])
 
-        articles.append(article)
+        for entry in feed.entries[:5]:
+            article = {
+                "title": entry.get("title", "No title"),
+                "url": entry.get("link", "No URL"),
+                "source": source["name"],
+                "published_at": entry.get("published", "No published date"),
+            }
+
+            articles.append(article)
 
     return articles
