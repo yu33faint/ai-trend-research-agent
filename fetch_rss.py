@@ -1,5 +1,5 @@
 import feedparser
-
+from datetime import datetime
 from config import ARTICLES_PER_SOURCE, MAX_ARTICLES, RSS_SOURCES
 
 
@@ -18,16 +18,22 @@ def fetch_articles():
 
             seen_urls.add(url)
 
+            published_parsed = entry.get("published_parsed")
+
+            if published_parsed:
+                published_datetime = datetime(*published_parsed[:6])
+            else:
+                published_datetime = datetime.min
+
             article = {
                 "title": entry.get("title", "No title"),
                 "url": url,
                 "source": source["name"],
-                "published_at": entry.get("published", "No published date"),
+                "published_at": published_datetime,
             }
 
             articles.append(article)
 
-            if len(articles) >= MAX_ARTICLES:
-                return articles
+    articles.sort(key=lambda article: article["published_datetime"], reverse=True)
 
-    return articles
+    return articles[:MAX_ARTICLES]
