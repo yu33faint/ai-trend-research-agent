@@ -2,9 +2,13 @@ from fetch_rss import fetch_articles
 from report_builder import build_markdown_report
 from report_writer import save_report
 from summarizer import summarize_article
+from classifier import classify_article
 
 def main():
   articles = fetch_articles()
+
+  for article in articles:
+    article["category"] = classify_article(article)
 
   if articles:
     articles[0]["summary"] = summarize_article(articles[0])
