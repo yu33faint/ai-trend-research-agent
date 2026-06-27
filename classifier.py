@@ -18,3 +18,38 @@ def classify_article(article):
     return "企業ニュース"
   
   return "その他"
+
+def judge_importance(article):
+  title = article["title"].lower()
+  source = article["source"].lower()
+
+  high_keywords = [
+    "openai",
+    "anthropic",
+    "google",
+    "microsoft",
+    "nvidia",
+    "gpt",
+    "claude",
+    "gemini",
+  ]
+
+  medium_keywords = [
+    "agent",
+    "agents",
+    "llm",
+    "model",
+    "release",
+    "launch",
+    "api",
+    "developer",
+    "github",
+  ]
+
+  if any(keyword in title or keyword in source for keyword in high_keywords):
+    return "high"
+  
+  if any(keyword in title or keyword in source for keyword in medium_keywords):
+    return "medium"
+  
+  return "low"

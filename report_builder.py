@@ -11,6 +11,7 @@ def build_markdown_report(articles):
         lines.append("")
         lines.append(f"- source: {article['source']}")
         lines.append(f"- category: {article['category']}")
+        lines.append(f"- importance: {article['importance']}")
         lines.append(f"- date: {article['published_at']}")
         lines.append(f"- summary: {article['summary']}")
         lines.append(f"- url: {article['url']}")
