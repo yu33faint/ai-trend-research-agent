@@ -5,22 +5,24 @@ from summarizer import summarize_article
 from classifier import classify_article, judge_importance
 from config import ENABLE_AI_SUMMARY, MAX_AI_SUMMARIES
 
+
 def main():
-  articles = fetch_articles()
+    articles = fetch_articles()
 
-  for article in articles:
-    article["category"] = classify_article(article)
-    article["importance"] = judge_importance(article)
+    for article in articles:
+        article["category"] = classify_article(article)
+        article["importance"] = judge_importance(article)
 
-  if ENABLE_AI_SUMMARY:
-    for article in articles[:MAX_AI_SUMMARIES]:
-      article["summary"] = summarize_article(article)
+    if ENABLE_AI_SUMMARY:
+        for article in articles[:MAX_AI_SUMMARIES]:
+            article["summary"] = summarize_article(article)
 
-  report = build_markdown_report(articles)
-  report_path = save_report(report)
+    report = build_markdown_report(articles)
+    report_path = save_report(report)
 
-  print(report)
-  print(f"Report saved to: {report_path}")
+    print(report)
+    print(f"Report saved to: {report_path}")
+
 
 if __name__ == "__main__":
-  main()
+    main()
