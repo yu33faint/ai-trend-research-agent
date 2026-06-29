@@ -1,31 +1,19 @@
+from config import AI_PROVIDER
+
 def summarize_article(article):
-  # TODO: 将来的にここでOpenAPIなどの生成AI APIを呼び出し，
-  # 記事タイトル・出典・公開日・URlをもとに要約文を生成する．
-  #
-  # 実装イメージ:
-  #
-  # from openai import OpenAI
-  #
-  # client = OpenAI()
-  #
-  # prompt = f"""
-  # 以下の記事情報を日本語で短く要約してください。
-  #
-  # タイトル: {article['title']}
-  # 出典: {article['source']}
-  # 公開日: {article['published_at']}
-  # URL: {article['url']}
-  #
-  # 出力形式:
-  # - 何についての記事か: ...
-  # - なぜ重要か: ...
-  # - 自分が確認すべき点: ...
-  # """
-  #
-  # response = client.responses.create(
-  #     model="gpt-5.5",
-  #     input=prompt,
-  # )
-  #
-  # return response.output_text
-  return f"{article['title']}に関する要約をここに生成します。"
+  if AI_PROVIDER == "dummy":
+    return summarize_article_dummy(article)
+  
+  if AI_PROVIDER == "gemini":
+      return summarize_article_with_gemini(article)
+  
+  return "要約プロバイダーが設定されていません。"
+
+def summarize_article_dummy(article):
+   return f"{article['title']}に関する要約をここに生成します。"
+
+def summrize_article_with_gemini(article):
+  # TODO: 将来的にここでGemini APIを呼び出す。
+  # 無料枠で安全に使うため，まずは最新一件のみを対象にする。
+  # APIキーは環境変数GEMINI_API_KEYから読み込む予定。
+  return "Gemini API要約は未実装です。"

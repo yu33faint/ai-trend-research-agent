@@ -3,7 +3,7 @@ from report_builder import build_markdown_report
 from report_writer import save_report
 from summarizer import summarize_article
 from classifier import classify_article, judge_importance
-from config import ENABLE_AI_SUMMARY
+from config import ENABLE_AI_SUMMARY, MAX_AI_SUMMARIES
 
 def main():
   articles = fetch_articles()
@@ -12,8 +12,9 @@ def main():
     article["category"] = classify_article(article)
     article["importance"] = judge_importance(article)
 
-  if ENABLE_AI_SUMMARY and articles:
-    articles[0]["summary"] = summarize_article(articles[0])
+  if ENABLE_AI_SUMMARY:
+    for article in articles[:MAX_AI_SUMMARIES]:
+      article["summary"] = summarize_article(article)
 
   report = build_markdown_report(articles)
   report_path = save_report(report)
