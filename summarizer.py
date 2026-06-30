@@ -1,10 +1,11 @@
 import os
 from dotenv import load_dotenv
 
-from config import AI_PROVIDER
+from config import AI_PROVIDER, GEMINI_MODEL
 
 
 load_dotenv()
+
 
 def summarize_article(article):
     if AI_PROVIDER == "dummy":
@@ -25,8 +26,10 @@ def summarize_article_with_gemini(article):
     
     if not api_key:
         return "Gemini APIキーが設定されていません。"
+
     # TODO: 将来的にここでGemini APIを呼び出す。
     # 実装時はgoogle-gemini SDKを使う。
+    # 無料枠で安全に使うため、まずは最新1件のみを対象にする。
     #
     # from google import genai
     #
@@ -41,11 +44,11 @@ def summarize_article_with_gemini(article):
     # URL: {article['url']}
     # """
     #
-    # response = client.interactions.create(
+    # interaction = client.interactions.create(
     #     model=GEMINI_MODEL,
     #     input=prompt,
     # )
     #
-    # return response.output_text
+    # return interaction.output_text
 
     return "Gemini API要約は未実装です。"
