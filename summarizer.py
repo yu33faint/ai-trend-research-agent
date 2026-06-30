@@ -26,5 +26,26 @@ def summarize_article_with_gemini(article):
     if not api_key:
         return "Gemini APIキーが設定されていません。"
     # TODO: 将来的にここでGemini APIを呼び出す。
-    # 無料枠で安全に使うため，まずは最新一件のみを対象にする。
+    # 実装時はgoogle-gemini SDKを使う。
+    #
+    # from google import genai
+    #
+    # client = genai.Client()
+    #
+    # prompt = f"""
+    # 以下の記事情報を日本語で短く要約してください。
+    #
+    # タイトル: {article['title']}
+    # 出典: {article['source']}
+    # 公開日; {article['published_at']}
+    # URL: {article['url']}
+    # """
+    #
+    # response = client.interactions.create(
+    #     model=GEMINI_MODEL,
+    #     input=prompt,
+    # )
+    #
+    # return response.output_text
+
     return "Gemini API要約は未実装です。"
