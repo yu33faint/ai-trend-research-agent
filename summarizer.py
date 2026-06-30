@@ -23,12 +23,12 @@ def summarize_article_dummy(article):
 
 def summarize_article_with_gemini(article):
     api_key = os.getenv("GEMINI_API_KEY")
-    
+
     if not api_key:
         return "Gemini APIキーが設定されていません。"
 
     # TODO: 将来的にここでGemini APIを呼び出す。
-    # 実装時はgoogle-gemini SDKを使う。
+    # 実装時は google-gemini SDKを使う。
     # 無料枠で安全に使うため、まずは最新1件のみを対象にする。
     #
     # from google import genai
@@ -40,7 +40,7 @@ def summarize_article_with_gemini(article):
     #
     # タイトル: {article['title']}
     # 出典: {article['source']}
-    # 公開日; {article['published_at']}
+    # 公開日: {article['published_at']}
     # URL: {article['url']}
     # """
     #
