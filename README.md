@@ -45,9 +45,24 @@ pip install -r requirements.txt
 python main.py
 ```
 
-実行すると、Hacker News RSSからAI関連の新着記事を取得し、Markdown形式のレポートを `reports/YYYY-MM-DD.md` に保存します。
+実行すると、複数のRSS情報源からAI・ソフトウェア関連の記事を取得し、Markdown形式のレポートを `reports/YYYY-MM-DD.md` に保存します。
 
 `reports/` は実行時に生成されるファイルの保存先であり、Git管理対象外です。
+
+## AI要約設定の切り替え
+
+AI要約機能は、環境変数で一時的に切り替えられます。
+
+通常は `ENABLE_AI_SUMMARY = False` のため、生成AI APIは呼び出されません。
+
+PowerShellでダミー要約を有効化する例:
+
+```powershell
+$env:ENABLE_AI_SUMMARY="true"
+$env:AI_PROVIDER="dummy"
+$env:MAX_AI_SUMMARIES="1"
+python main.py
+```
 
 ## APIキー管理について
 
@@ -68,10 +83,10 @@ GEMINI_API_KEY=your_gemini_api_key_here
 `config.py` の以下の設定により、AI要約の有効化・利用プロバイダー・要約件数を制御する想定です。
 
 ```python
-ENABLE_AI_SUMMARY = False
-AI_PROVIDER = "dummy"
-MAX_AI_SUMMARIES = 1
-GEMINI_MODEL = "gemini-3.1-flash-lite"
+ENABLE_AI_SUMMARY = get_bool_env("ENABLE_AI_SUMMARY", False)
+AI_PROVIDER = os.getenv("AI_PROVIDER", "dummy")
+MAX_AI_SUMMARIES = get_int_env("MAX_AI_SUMMARIES", 1)
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite")
 ```
 
 ## 現在の構成
