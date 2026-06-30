@@ -1,10 +1,7 @@
 import os
-from dotenv import load_dotenv
+from google import genai
 
 from config import AI_PROVIDER, GEMINI_MODEL
-
-
-load_dotenv()
 
 
 def summarize_article(article):
@@ -27,28 +24,32 @@ def summarize_article_with_gemini(article):
     if not api_key:
         return "Gemini APIキーが設定されていません。"
 
-    # TODO: 将来的にここでGemini APIを呼び出す。
-    # 実装時は google-gemini SDK を使う。
-    # 無料枠で安全に使うため、まずは最新1件のみを対象にする。
-    #
-    # from google import genai
-    #
-    # client = genai.Client()
-    #
-    # prompt = f"""
-    # 以下の記事情報を日本語で短く要約してください。
-    #
-    # タイトル: {article['title']}
-    # 出典: {article['source']}
-    # 公開日: {article['published_at']}
-    # URL: {article['url']}
-    # """
-    #
-    # interaction = client.interactions.create(
-    #     model=GEMINI_MODEL,
-    #     input=prompt,
-    # )
-    #
-    # return interaction.output_text
+    prompt = f"""
+以下の記事情報を日本語で短く要約してください。
+本文はまだ取得していないため、タイトル・出典・公開日・URLから分かる範囲で、推測しすぎずに整理してください。
 
-    return "Gemini API要約は未実装です。"
+タイトル: {article['title']}
+出典: {article['source']}
+公開日: {article['published_at']}
+URL: {article['url']}
+
+出力形式:
+- 何についての記事か:
+- なぜ確認する価値があるか:
+- 自分が次に確認すべき点:
+"""
+
+    try:
+        client = genai.Client(api_key=api_key)
+
+        interaction = client.interactions.create(
+            model=GEMINI_MODEL,
+            input=prompt,
+        )
+
+        return interaction.output_text
+
+    except Exception as error:
+        print(f"Gemini API要約に失敗しました: {article['title']}")
+        print(error)
+        return "Gemini API要約に失敗しました。"
