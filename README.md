@@ -64,6 +64,40 @@ $env:MAX_AI_SUMMARIES="1"
 python main.py
 ```
 
+### 動作確認パターン
+
+#### 1. 通常実行
+
+```powershell
+python main.py
+```
+
+`ENABLE_AI_SUMMARY` を設定しない場合、AI要約は実行されません。
+
+#### 2. ダミー要約を有効化する
+
+```powershell
+$env:ENABLE_AI_SUMMARY="true"
+$env:AI_PROVIDER="dummy"
+$env:MAX_AI_SUMMARIES="1"
+python main.py
+```
+
+この設定では、最新1件だけダミー要約に差し替わります。Gemini APIは呼び出されないため、料金は発生しません。
+
+#### 3. Geminiを選ぶが、APIキー未設定で確認する
+
+```powershell
+$env:ENABLE_AI_SUMMARY="true"
+$env:AI_PROVIDER="gemini"
+$env:MAX_AI_SUMMARIES="1"
+python main.py
+```
+
+`.env` または環境変数に `GEMINI_API_KEY` が設定されていない場合、要約欄には `Gemini APIキーが設定されていません。` と表示されます。
+
+この段階ではAPI呼び出し処理は未実装のため、Gemini APIは呼び出されません。
+
 ## APIキー管理について
 
 将来的にGemini APIの無料枠を使って要約機能を追加する予定です。

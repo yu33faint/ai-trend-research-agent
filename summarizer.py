@@ -28,7 +28,7 @@ def summarize_article_with_gemini(article):
         return "Gemini APIキーが設定されていません。"
 
     # TODO: 将来的にここでGemini APIを呼び出す。
-    # 実装時は google-gemini SDKを使う。
+    # 実装時は google-gemini SDK を使う。
     # 無料枠で安全に使うため、まずは最新1件のみを対象にする。
     #
     # from google import genai
