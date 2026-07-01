@@ -5,14 +5,19 @@ from config import AI_PROVIDER, GEMINI_MODEL
 
 
 def build_summary_prompt(article):
+    content = article.get("content", "")
+
     return f"""
 以下の記事情報を日本語で短く要約してください。
-本文はまだ取得していないため、タイトル・出典・公開日・URLから分かる範囲で、推測しすぎずに整理してください。
+本文がある場合は本文を優先し、推測しすぎないでください。
 
 タイトル: {article['title']}
 出典: {article['source']}
 公開日: {article['published_at']}
 URL: {article['url']}
+
+本文:
+{content}
 
 出力形式:
 - 何についての記事か:

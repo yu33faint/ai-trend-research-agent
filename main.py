@@ -4,6 +4,7 @@ from report_writer import save_report
 from summarizer import summarize_article
 from classifier import classify_article, judge_importance
 from config import ENABLE_AI_SUMMARY, MAX_AI_SUMMARIES
+from article_fetcher import fetch_article_content
 
 
 def main():
@@ -15,6 +16,7 @@ def main():
 
     if ENABLE_AI_SUMMARY:
         for article in articles[:MAX_AI_SUMMARIES]:
+            article["content"] = fetch_article_content(article["url"])
             article["summary"] = summarize_article(article)
 
     report = build_markdown_report(articles)
