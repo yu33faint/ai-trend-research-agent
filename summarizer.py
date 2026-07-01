@@ -4,6 +4,23 @@ from google import genai
 from config import AI_PROVIDER, GEMINI_MODEL
 
 
+def build_summary_prompt(article):
+    return f"""
+以下の記事情報を日本語で短く要約してください。
+本文はまだ取得していないため、タイトル・出典・公開日・URLから分かる範囲で、推測しすぎずに整理してください。
+
+タイトル: {article['title']}
+出典: {article['source']}
+公開日: {article['published_at']}
+URL: {article['url']}
+
+出力形式:
+- 何についての記事か:
+- なぜ確認する価値があるか:
+- 自分が次に確認すべき点:
+"""
+
+
 def summarize_article(article):
     if AI_PROVIDER == "dummy":
         return summarize_article_dummy(article)
@@ -24,20 +41,7 @@ def summarize_article_with_gemini(article):
     if not api_key:
         return "Gemini APIキーが設定されていません。"
 
-    prompt = f"""
-以下の記事情報を日本語で短く要約してください。
-本文はまだ取得していないため、タイトル・出典・公開日・URLから分かる範囲で、推測しすぎずに整理してください。
-
-タイトル: {article['title']}
-出典: {article['source']}
-公開日: {article['published_at']}
-URL: {article['url']}
-
-出力形式:
-- 何についての記事か:
-- なぜ確認する価値があるか:
-- 自分が次に確認すべき点:
-"""
+    prompt = build_summary_prompt(article)
 
     try:
         client = genai.Client(api_key=api_key)
