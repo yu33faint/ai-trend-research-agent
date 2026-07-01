@@ -96,7 +96,7 @@ python main.py
 
 `.env` または環境変数に `GEMINI_API_KEY` が設定されていない場合、要約欄には `Gemini APIキーが設定されていません。` と表示されます。
 
-この段階ではAPI呼び出し処理は未実装のため、Gemini APIは呼び出されません。
+Gemini API呼び出し処理は実装済みですが、`ENABLE_AI_SUMMARY` と `AI_PROVIDER` を明示的に設定しない限り実行されません。
 
 ## APIキー管理について
 
@@ -112,7 +112,9 @@ GEMINI_API_KEY=your_gemini_api_key_here
 
 現時点では、料金が発生しないように生成AI APIは呼び出していません。
 
-`summarizer.py` ではダミー要約を返す実装にしており、将来的にはGemini APIの無料枠を使って、最新記事1件から段階的にAI要約を有効化する予定です。
+`summarizer.py` では、`AI_PROVIDER` に応じてダミー要約またはGemini API要約を切り替えます。
+通常は `ENABLE_AI_SUMMARY = False` のため、生成AI APIは呼び出されません。
+`ENABLE_AI_SUMMARY=true` かつ `AI_PROVIDER=gemini` を設定し、`GEMINI_API_KEY` が存在する場合のみ、最新記事から指定件数分のGemini API要約を実行します。
 
 `config.py` の以下の設定により、AI要約の有効化・利用プロバイダー・要約件数を制御する想定です。
 
@@ -160,8 +162,7 @@ examples/
 
 ## 次に追加したいこと
 
-- Gemini API無料枠を使った最新記事1件の要約
-- Gemini API利用時のエラー処理
+- Gemini API利用時のエラー処理改善
 - Gemini API利用時のレート制限・無料枠を意識した制御
 - 本文取得による要約精度の向上
 - カテゴリ分類・重要度判定の精度改善
