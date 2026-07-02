@@ -40,6 +40,8 @@ def build_markdown_report(articles):
             lines.append(f"- category: {article['category']}")
             lines.append(f"- importance: {article['importance']}")
             lines.append(f"- date: {article['published_at']}")
+            lines.append(f"- content fetched: {article.get('content_fetched', False)}")
+            lines.append(f"- content length: {article.get('content_length', 0)}")
             lines.append(f"- url: [元記事を開く]({article['url']})")
             lines.append("")
             lines.append("#### summary")

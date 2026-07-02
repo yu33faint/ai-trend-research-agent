@@ -16,7 +16,11 @@ def main():
 
     if ENABLE_AI_SUMMARY:
         for article in articles[:MAX_AI_SUMMARIES]:
-            article["content"] = fetch_article_content(article["url"])
+            content = fetch_article_content(article["url"])
+
+            article["content"] = content
+            article["content_fetched"] = bool(content)
+            article["content_length"] = len(content)
             article["summary"] = summarize_article(article)
 
     report = build_markdown_report(articles)
