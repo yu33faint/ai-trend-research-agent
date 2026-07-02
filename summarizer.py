@@ -7,9 +7,14 @@ from config import AI_PROVIDER, GEMINI_MODEL
 def build_summary_prompt(article):
     content = article.get("content", "")
 
+    if content:
+        content_instruction = "本文を優先し、本文に書かれている内容をもとに要約してください。"
+    else:
+        content_instruction = "本文は取得できていないため、タイトル・出典・公開日・URLから分かる範囲で、推測しすぎずに整理してください。"
+
     return f"""
 以下の記事情報を日本語で短く要約してください。
-本文がある場合は本文を優先し、推測しすぎないでください。
+{content_instruction}
 
 タイトル: {article['title']}
 出典: {article['source']}
