@@ -10,8 +10,8 @@ from config import (
     MAX_SLACK_ARTICLES,
 )
 from article_fetcher import fetch_article_content
-from slack_notifier import send_slack_message
-from slack_message_builder import build_slack_message, select_slack_articles
+from ai_trend_agent.slack.notifier import send_slack_message
+from ai_trend_agent.slack.message_builder import build_slack_message, select_slack_articles
 from report_window import get_report_window, is_in_report_window
 
 
