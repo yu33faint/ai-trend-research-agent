@@ -66,3 +66,5 @@ MAX_SLACK_ARTICLES = min(
     get_int_env("MAX_SLACK_ARTICLES", 3),
     MAX_SAFE_SLACK_ARTICLES,
 )
+
+REPORT_HOUR = get_int_env("REPORT_HOUR", 8)

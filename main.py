@@ -12,10 +12,18 @@ from config import (
 from article_fetcher import fetch_article_content
 from slack_notifier import send_slack_message
 from slack_message_builder import build_slack_message, select_slack_articles
+from report_window import get_report_window, is_in_report_window
 
 
 def main():
     articles = fetch_articles()
+
+    start, end = get_report_window()
+
+    articles = [
+        article for article in articles
+        if is_in_report_window(article["published_datetime"], start, end)
+    ]
 
     for article in articles:
         article["category"] = classify_article(article)

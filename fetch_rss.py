@@ -1,5 +1,5 @@
 import feedparser
-from datetime import datetime
+from datetime import datetime, timezone
 from config import ARTICLES_PER_SOURCE, MAX_ARTICLES, RSS_SOURCES
 
 
@@ -30,7 +30,7 @@ def fetch_articles():
             published_parsed = entry.get("published_parsed")
 
             if published_parsed:
-                published_datetime = datetime(*published_parsed[:6])
+                published_datetime = datetime(*published_parsed[:6], tzinfo=timezone.utc)
             else:
                 published_datetime = datetime.min
 
