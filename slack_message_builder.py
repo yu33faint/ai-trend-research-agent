@@ -10,13 +10,17 @@ def select_slack_articles(articles, max_count):
     ]
 
     target_articles = high_articles + medium_articles
+    selected_articles = target_articles[:max_count]
 
-    return target_articles[:max_count]
+    for article in selected_articles:
+        importance = article.get("importance", "low")
+        article["selection_reason"] = f"importance が {importance} のためSlack掲載対象にしました。"
+
+    return selected_articles
 
 
 def build_slack_message(articles):
     lines = []
-
     lines.append("*AI Trend Daily Report*")
     lines.append(f"本日のピックアップ: {len(articles)}件")
     lines.append("")
@@ -52,6 +56,7 @@ def build_slack_message(articles):
             lines.append(f"- source: {article['source']}")
             lines.append(f"- category: {article['category']}")
             lines.append(f"- importance: {article['importance']}")
+            lines.append(f"- reason: {article.get('selection_reason', '選定理由は未設定です。')}")
             lines.append(f"- link: <{article['url']}|元記事を開く>")
             lines.append("")
             lines.append("*summary*")
