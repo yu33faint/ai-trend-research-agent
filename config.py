@@ -50,3 +50,6 @@ MAX_AI_SUMMARIES = min(
     MAX_SAFE_AI_SUMMARIES,
 )
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite")
+
+SLACK_WEBHOOK_URL = os.getenv("SLACK_WEBHOOK_URL", "")
+ENABLE_SLACK_NOTIFY = get_bool_env("ENABLE_SLACK_NOTIFY", False)

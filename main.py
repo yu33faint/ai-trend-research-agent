@@ -3,8 +3,9 @@ from report_builder import build_markdown_report
 from report_writer import save_report
 from summarizer import summarize_article
 from classifier import classify_article, judge_importance
-from config import ENABLE_AI_SUMMARY, MAX_AI_SUMMARIES
+from config import ENABLE_AI_SUMMARY, MAX_AI_SUMMARIES, ENABLE_SLACK_NOTIFY
 from article_fetcher import fetch_article_content
+from slack_notifier import send_slack_message
 
 
 def main():
@@ -28,6 +29,9 @@ def main():
 
     print(report)
     print(f"Report saved to: {report_path}")
+
+    if ENABLE_SLACK_NOTIFY:
+        send_slack_message(report)
 
 
 if __name__ == "__main__":
