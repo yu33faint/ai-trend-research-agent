@@ -1,6 +1,6 @@
 from fetch_rss import fetch_articles
-from report_builder import build_markdown_report
-from report_writer import save_report
+from ai_trend_agent.reports.markdown_builder import build_markdown_report
+from ai_trend_agent.reports.writer import save_report
 from summarizer import summarize_article
 from classifier import classify_article, judge_importance
 from config import (
