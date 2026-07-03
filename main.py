@@ -1,4 +1,4 @@
-from fetch_rss import fetch_articles
+from ai_trend_agent.sources.rss import fetch_articles
 from ai_trend_agent.reports.markdown_builder import build_markdown_report
 from ai_trend_agent.reports.writer import save_report
 from summarizer import summarize_article
@@ -9,7 +9,7 @@ from config import (
     ENABLE_SLACK_NOTIFY,
     MAX_SLACK_ARTICLES,
 )
-from article_fetcher import fetch_article_content
+from ai_trend_agent.sources.article_fetcher import fetch_article_content
 from ai_trend_agent.slack.notifier import send_slack_message
 from ai_trend_agent.slack.message_builder import build_slack_message, select_slack_articles
 from report_window import get_report_window, is_in_report_window
