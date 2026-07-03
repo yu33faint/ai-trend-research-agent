@@ -1,8 +1,15 @@
 def select_slack_articles(articles, max_count):
-    target_articles = [
+    high_articles = [
         article for article in articles
-        if article.get("importance") in ["high", "medium"]
+        if article.get("importance") == "high"
     ]
+
+    medium_articles = [
+        article for article in articles
+        if article.get("importance") == "medium"
+    ]
+
+    target_articles = high_articles + medium_articles
 
     return target_articles[:max_count]
 
