@@ -1,8 +1,8 @@
 from ai_trend_agent.sources.rss import fetch_articles
 from ai_trend_agent.reports.markdown_builder import build_markdown_report
 from ai_trend_agent.reports.writer import save_report
-from summarizer import summarize_article
-from classifier import classify_article, judge_importance
+from ai_trend_agent.processing.summarizer import summarize_article
+from ai_trend_agent.processing.classifier import classify_article, judge_importance
 from config import (
     ENABLE_AI_SUMMARY,
     MAX_AI_SUMMARIES,
@@ -12,7 +12,7 @@ from config import (
 from ai_trend_agent.sources.article_fetcher import fetch_article_content
 from ai_trend_agent.slack.notifier import send_slack_message
 from ai_trend_agent.slack.message_builder import build_slack_message, select_slack_articles
-from report_window import get_report_window, is_in_report_window
+from ai_trend_agent.processing.report_window import get_report_window, is_in_report_window
 
 
 def main():
