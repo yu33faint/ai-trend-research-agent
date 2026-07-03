@@ -32,6 +32,14 @@ RSS_SOURCES = [
         "name": "OpenAI Blog",
         "url": "https://openai.com/blog/rss.xml",
     },
+    {
+        "name": "GitHub Blog",
+        "url": "https://github.blog/feed/",
+    },
+    {
+        "name": "Google AI Blog",
+        "url": "https://blog.google/technology/ai/rss/",
+    },
 ]
 
 MAX_ARTICLES = 10
