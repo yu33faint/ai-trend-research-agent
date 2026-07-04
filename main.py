@@ -18,7 +18,7 @@ from ai_trend_agent.processing.ai_filter import is_ai_related
 
 
 def main():
-    fetched_articles = fetch_articles()
+    fetched_articles, fetch_statuses = fetch_articles()
 
     start, end = get_report_window()
 
@@ -52,6 +52,7 @@ def main():
         window_articles,
         ai_articles,
         slack_articles,
+        fetch_statuses,
     )
     report = build_markdown_report(ai_articles, source_statuses)
     report_path = save_report(report)

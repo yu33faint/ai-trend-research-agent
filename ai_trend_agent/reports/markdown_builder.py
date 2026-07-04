@@ -58,12 +58,21 @@ def build_markdown_report(articles, source_statuses):
         window_count = source_status["window_count"]
         ai_count = source_status["ai_count"]
         slack_count = source_status["slack_count"]
+        fetch_status = source_status["fetch_status"]
 
-        lines.append(
-            f"- {source}: fetched {fetched_count}件 / "
-            f"window {window_count}件 / "
-            f"ai {ai_count}件 / "
-            f"slack {slack_count}件"
-        )
+        if fetch_status == "failed":
+            lines.append(
+                f"- {source}: fetch failed / "
+                f"window {window_count}件 / "
+                f"ai {ai_count}件 / "
+                f"slack {slack_count}件"
+            )
+        else:
+            lines.append(
+                f"- {source}: fetched {fetched_count}件 / "
+                f"window {window_count}件 / "
+                f"ai {ai_count}件 / "
+                f"slack {slack_count}件"
+            )
 
     return "\n".join(lines)

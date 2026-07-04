@@ -7,18 +7,41 @@ from ai_trend_agent.sources.url_cleaner import clean_url
 def fetch_articles():
     articles = []
     seen_urls = set()
+    fetch_statuses = []
 
     for source in RSS_SOURCES:
         feed = feedparser.parse(source["url"])
 
         if feed.bozo:
+            error_message = str(feed.bozo_exception)
+
             print(f"Failed to parse RSS: {source['name']}")
-            print(feed.bozo_exception)
+            print(error_message)
+
+            fetch_statuses.append({
+                "source": source["name"],
+                "status": "failed",
+                "error": error_message,
+            })
+
             continue
 
         if not feed.entries:
             print(f"No entries found: {source['name']}")
+
+            fetch_statuses.append({
+                "source": source["name"],
+                "status": "empty",
+                "error": "",
+            })
+
             continue
+        
+        fetch_statuses.append({
+            "source": source["name"],
+            "status": "ok",
+            "error": "",
+        })
 
         for entry in feed.entries[:ARTICLES_PER_SOURCE]:
             url = entry.get("link", "No URL")
@@ -49,4 +72,4 @@ def fetch_articles():
 
     articles.sort(key=lambda article: article["published_datetime"], reverse=True)
 
-    return articles
+    return articles, fetch_statuses
