@@ -47,4 +47,4 @@ def fetch_articles():
 
     articles.sort(key=lambda article: article["published_datetime"], reverse=True)
 
-    return articles[:MAX_ARTICLES]
+    return articles

@@ -1,22 +1,40 @@
 def select_slack_articles(articles, max_count):
-    high_articles = [
-        article for article in articles
-        if article.get("importance") == "high"
-    ]
+    grouped_articles = {}
 
-    medium_articles = [
-        article for article in articles
-        if article.get("importance") == "medium"
-    ]
+    for article in articles:
+        source = article["source"]
 
-    target_articles = high_articles + medium_articles
-    selected_articles = target_articles[:max_count]
+        if source not in grouped_articles:
+            grouped_articles[source] = []
 
-    for article in selected_articles:
-        importance = article.get("importance", "low")
-        article["selection_reason"] = f"importance が {importance} のためSlack掲載対象にしました。"
+        grouped_articles[source].append(article)
 
-    return selected_articles
+    selected_articles = []
+
+    for source, source_articles in grouped_articles.items():
+        high_articles = [
+            article for article in source_articles
+            if article.get("importance") == "high"
+        ]
+
+        medium_articles = [
+            article for article in source_articles
+            if article.get("importance") == "medium"
+        ]
+
+        if high_articles:
+            selected_article = high_articles[0]
+            selected_article["selection_reason"] = f"{source} の記事の中で importance が high のため選定しました。"
+        elif medium_articles:
+            selected_article = medium_articles[0]
+            selected_article["selection_reason"] = f"{source} の記事の中で importance が medium のため選定しました。"
+        else:
+            selected_article = source_articles[0]
+            selected_article["selection_reason"] = f"{source} の記事の中で最新記事として選定しました。"
+
+        selected_articles.append(selected_article)
+
+    return selected_articles[:max_count]
 
 
 def build_slack_message(articles):
