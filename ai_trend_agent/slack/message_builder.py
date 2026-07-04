@@ -50,6 +50,7 @@ def build_slack_message(articles, source_statuses):
         sections = [
             ("high", "High Priority"),
             ("medium", "Medium Priority"),
+            ("low", "Low Priority"),
         ]
 
         for importance, section_title in sections:
