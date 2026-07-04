@@ -48,6 +48,14 @@ RSS_SOURCES = [
         "name": "Publickey",
         "url": "https://www.publickey1.jp/atom.xml",
     },
+    {
+        "name": "@IT",
+        "url": "https://rss.itmedia.co.jp/rss/2.0/ait.xml",
+    },
+    {
+        "name": "SHIFT AI TIMES",
+        "url": "https://shift-ai.co.jp/blog/feed/",
+    },
 ]
 
 MAX_ARTICLES = 10
