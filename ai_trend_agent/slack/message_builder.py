@@ -85,8 +85,16 @@ def build_slack_message(articles, source_statuses):
 
     for source_status in source_statuses:
         source = source_status["source"]
-        count = source_status["count"]
+        fetched_count = source_status["fetched_count"]
+        window_count = source_status["window_count"]
+        ai_count = source_status["ai_count"]
+        slack_count = source_status["slack_count"]
 
-        lines.append(f"- {source}: {count}件")
+        lines.append(
+            f"- {source}: fethced {fetched_count}件 / "
+            f"window {window_count}件 / "
+            f"ai {ai_count}件 / "
+            f"slack {slack_count}件"
+        )
 
     return "\n".join(lines)

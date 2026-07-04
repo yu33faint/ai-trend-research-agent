@@ -54,11 +54,16 @@ def build_markdown_report(articles, source_statuses):
 
     for source_status in source_statuses:
         source = source_status["source"]
-        count = source_status["count"]
+        fetched_count = source_status["fetched_count"]
+        window_count = source_status["window_count"]
+        ai_count = source_status["ai_count"]
+        slack_count = source_status["slack_count"]
 
-        if source_status["has_articles"]:
-            lines.append(f"- {source}: {count}件")
-        else:
-            lines.append(f"- {source}: 0件 (対象期間内の記事なし)")
+        lines.append(
+            f"- {source}: fetched {fetched_count}件 / "
+            f"window {window_count}件 / "
+            f"ai {ai_count}件 / "
+            f"slack {slack_count}件"
+        )
 
     return "\n".join(lines)

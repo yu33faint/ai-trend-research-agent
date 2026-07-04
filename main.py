@@ -18,25 +18,25 @@ from ai_trend_agent.processing.ai_filter import is_ai_related
 
 
 def main():
-    articles = fetch_articles()
+    fetched_articles = fetch_articles()
 
     start, end = get_report_window()
 
-    articles = [
-        article for article in articles
+    window_articles = [
+        article for article in fetched_articles
         if is_in_report_window(article["published_datetime"], start, end)
     ]
 
-    articles = [
-        article for article in articles
+    ai_articles = [
+        article for article in window_articles
         if is_ai_related(article)
     ]
 
-    for article in articles:
+    for article in ai_articles:
         article["category"] = classify_article(article)
         article["importance"] = judge_importance(article)
 
-    slack_articles = select_slack_articles(articles, MAX_SLACK_ARTICLES)
+    slack_articles = select_slack_articles(ai_articles, MAX_SLACK_ARTICLES)
 
     if ENABLE_AI_SUMMARY:
         for article in slack_articles[:MAX_AI_SUMMARIES]:
@@ -47,8 +47,13 @@ def main():
             article["content_length"] = len(content)
             article["summary"] = summarize_article(article)
 
-    source_statuses = build_source_status(articles)
-    report = build_markdown_report(articles, source_statuses)
+    source_statuses = build_source_status(
+        fetched_articles,
+        window_articles,
+        ai_articles,
+        slack_articles,
+    )
+    report = build_markdown_report(ai_articles, source_statuses)
     report_path = save_report(report)
 
     print(report)
