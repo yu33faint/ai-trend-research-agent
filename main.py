@@ -14,6 +14,7 @@ from ai_trend_agent.slack.notifier import send_slack_message
 from ai_trend_agent.slack.message_builder import build_slack_message, select_slack_articles
 from ai_trend_agent.processing.report_window import get_report_window, is_in_report_window
 from ai_trend_agent.reports.source_status import build_source_status
+from ai_trend_agent.processing.ai_filter import is_ai_related
 
 
 def main():
@@ -24,6 +25,11 @@ def main():
     articles = [
         article for article in articles
         if is_in_report_window(article["published_datetime"], start, end)
+    ]
+
+    articles = [
+        article for article in articles
+        if is_ai_related(article)
     ]
 
     for article in articles:
