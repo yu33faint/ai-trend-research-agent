@@ -1,6 +1,6 @@
 import feedparser
 from datetime import datetime, timezone
-from config import ARTICLES_PER_SOURCE, MAX_ARTICLES, RSS_SOURCES
+from config import ARTICLES_PER_SOURCE, RSS_SOURCES
 from ai_trend_agent.sources.url_cleaner import clean_url
 
 
