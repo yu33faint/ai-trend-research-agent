@@ -1,6 +1,7 @@
 import feedparser
 from datetime import datetime, timezone
 from config import ARTICLES_PER_SOURCE, MAX_ARTICLES, RSS_SOURCES
+from ai_trend_agent.sources.url_cleaner import clean_url
 
 
 def fetch_articles():
@@ -21,6 +22,7 @@ def fetch_articles():
 
         for entry in feed.entries[:ARTICLES_PER_SOURCE]:
             url = entry.get("link", "No URL")
+            url = clean_url(url)
 
             if url in seen_urls:
                 continue

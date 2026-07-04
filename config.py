@@ -40,13 +40,20 @@ RSS_SOURCES = [
         "name": "Google AI Blog",
         "url": "https://blog.google/technology/ai/rss/",
     },
+    {
+        "name": "AINOW",
+        "url": "https://ainow.ai/feed/",
+    },
+    {
+        "name": "Publickey",
+        "url": "https://www.publickey1.jp/atom.xml",
+    },
 ]
 
 MAX_ARTICLES = 10
 ARTICLES_PER_SOURCE = 20
 MAX_SAFE_AI_SUMMARIES = 1
 MAX_ARTICLE_CONTENT_CHARS = get_int_env("MAX_ARTICLE_CONTENT_CHARS", 4000)
-MAX_SAFE_SLACK_ARTICLES = 3
 
 HTTP_HEADERS = {
     "User-Agent": "AI-Trend-Research-Agent/0.1"
@@ -62,9 +69,6 @@ GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite")
 
 SLACK_WEBHOOK_URL = os.getenv("SLACK_WEBHOOK_URL", "")
 ENABLE_SLACK_NOTIFY = get_bool_env("ENABLE_SLACK_NOTIFY", False)
-MAX_SLACK_ARTICLES = min(
-    get_int_env("MAX_SLACK_ARTICLES", 3),
-    MAX_SAFE_SLACK_ARTICLES,
-)
+MAX_SLACK_ARTICLES = 6
 
 REPORT_HOUR = get_int_env("REPORT_HOUR", 8)
