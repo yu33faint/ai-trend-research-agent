@@ -1,184 +1,191 @@
 # AI Trend Research Agent
 
-AI・ソフトウェア・関連企業の最新情報を取得し、要約・分類して毎朝確認できる形に整理するエージェントです。
+AI・ソフトウェア・関連企業の最新情報をRSSから収集し、重要そうな記事を整理してSlackに通知するニュース収集エージェントです。
 
-## 目的
+毎朝8時を基準に、直近24時間に公開された記事を対象として、AI関連の記事を抽出し、情報源ごとの取得状況も含めてレポートします。
 
-- AIエージェント開発を学ぶ
-- 毎朝、重要なAI・ソフトウェア関連ニュースを確認できるようにする
-- 出典リンク付きで情報を整理する
-- 日常的に使える実用ツールにする
-
-## v0.1 の到達点
-
-現時点では、生成AI APIを呼び出さずに、RSSベースでAI・ソフトウェア関連情報を収集し、カテゴリ・重要度・ダミー要約付きのMarkdownレポートを生成できます。
-
-### v0.1 でできること
+## 主な機能
 
 - 複数RSS情報源からの記事取得
-- URLをもとにした重複除外
-- 公開日時の新しい順での記事並び替え
-- 取得記事数の上限設定
-- キーワードベースのカテゴリ分類
-- キーワードベースの重要度判定
-- 重要度ごとのMarkdownレポート整理
-- ダミー要約欄の表示
-- `reports/` への日付付きMarkdown保存
-- 生成レポートをGit管理対象外にする運用
-- サンプル出力を `examples/` に配置
+- 昨日8時から今日8時までの24時間を対象にした記事抽出
+- AI関連キーワードによる記事フィルタ
+- カテゴリ分類と重要度判定
+- 情報源ごとのSlack掲載記事選定
+- Markdownレポート生成
+- Slack Incoming Webhookによる通知
+- GitHub Actionsによる毎朝8時の自動実行
+- Source Statusによる取得状況の可視化
 
-## v0.2 の到達点
+## 情報源
 
-v0.2では、AI要約対象の記事についてURL先の本文取得を行い、取得できた本文をGemini要約に利用できるようにしました。
+現在は以下のRSSを対象にしています。
 
-### v0.2 で追加したこと
+- Hacker News RSS
+- OpenAI Blog
+- GitHub Blog
+- Google AI Blog
+- AINOW
+- Publickey
+- @IT
+- SHIFT AI TIMES
 
-- 記事URLから本文テキストを取得
-- BeautifulSoupによるHTML解析
-- script / style / nav / footer などの不要要素除去
-- Geminiに渡す本文文字数の上限設定
-- 本文を取得できたかどうかと、取得文字数をレポートに表示
-- 本文あり・なしに応じた要約プロンプトの切り替え
+## 処理の流れ
+
+```text
+RSS取得
+→ 対象期間でフィルタ
+→ AI関連の記事に絞り込み
+→ カテゴリ分類
+→ 重要度判定
+→ 情報源ごとにSlack掲載記事を選定
+→ Markdownレポート生成
+→ Slack通知
+```
+
+## Source Status
+
+Source Statusでは、各情報源の記事がどの段階まで残ったかを表示します。
+
+```text
+- Hacker News RSS: fetched 20件 / window 7件 / ai 5件 / slack 1件
+- OpenAI Blog: fetched 3件 / window 0件 / ai 0件 / slack 0件
+- Publickey: fetch failed / window 0件 / ai 0件 / slack 0件
+```
+
+これにより、記事が少ない日でも以下を区別できます。
+
+- RSS取得に失敗した
+- RSSは取得できたが対象期間内の記事がなかった
+- 対象期間内の記事はあったがAI関連ではなかった
+- AI関連の記事はあったがSlack掲載対象にはならなかった
 
 ## セットアップ
 
-Pythonの仮想環境を作成し、必要なライブラリをインストールします。
+Pythonの仮想環境を作成し、依存ライブラリをインストールします。
 
-```bash
+```powershell
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
-## 実行方法
-
-以下のコマンドで、AI関連ニュースの取得とMarkdownレポート生成を実行します。
-
-```bash
-python main.py
-```
-
-実行すると、複数のRSS情報源からAI・ソフトウェア関連の記事を取得し、Markdown形式のレポートを `reports/YYYY-MM-DD.md` に保存します。
-
-`reports/` は実行時に生成されるファイルの保存先であり、Git管理対象外です。
-
-## AI要約設定の切り替え
-
-AI要約機能は、環境変数で一時的に切り替えられます。
-
-通常は `ENABLE_AI_SUMMARY = False` のため、生成AI APIは呼び出されません。
-
-PowerShellでダミー要約を有効化する例:
-
-```powershell
-$env:ENABLE_AI_SUMMARY="true"
-$env:AI_PROVIDER="dummy"
-$env:MAX_AI_SUMMARIES="1"
-python main.py
-```
-
-### 動作確認パターン
-
-#### 1. 通常実行
-
-```powershell
-python main.py
-```
-
-`ENABLE_AI_SUMMARY` を設定しない場合、AI要約は実行されません。
-
-#### 2. ダミー要約を有効化する
-
-```powershell
-$env:ENABLE_AI_SUMMARY="true"
-$env:AI_PROVIDER="dummy"
-$env:MAX_AI_SUMMARIES="1"
-python main.py
-```
-
-この設定では、最新1件だけダミー要約に差し替わります。Gemini APIは呼び出されないため、料金は発生しません。
-
-#### 3. Geminiを選ぶが、APIキー未設定で確認する
-
-```powershell
-$env:ENABLE_AI_SUMMARY="true"
-$env:AI_PROVIDER="gemini"
-$env:MAX_AI_SUMMARIES="1"
-python main.py
-```
-
-`.env` または環境変数に `GEMINI_API_KEY` が設定されていない場合、要約欄には `Gemini APIキーが設定されていません。` と表示されます。
-
-Gemini API呼び出し処理は実装済みですが、`ENABLE_AI_SUMMARY` と `AI_PROVIDER` を明示的に設定しない限り実行されません。
-
-## APIキー管理について
-
-将来的にGemini APIの無料枠を使って要約機能を追加する予定です。
-
-本物のAPIキーは `.env` に保存し、Git管理対象には含めません。必要な環境変数の例は `.env.example` に記載しています。
+`.env.example` を参考に `.env` を作成します。
 
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
+SLACK_WEBHOOK_URL=your_slack_webhook_url_here
+
+ENABLE_SLACK_NOTIFY=false
+ENABLE_AI_SUMMARY=false
+AI_PROVIDER=dummy
+MAX_AI_SUMMARIES=1
+REPORT_HOUR=8
 ```
 
-## 現在の要約機能について
+## 環境変数
 
-現時点では、料金が発生しないように生成AI APIは呼び出していません。
+| 変数名                | 内容                                              |
+| --------------------- | ------------------------------------------------- |
+| `SLACK_WEBHOOK_URL`   | Slack Incoming WebhookのURL                       |
+| `ENABLE_SLACK_NOTIFY` | Slack通知を有効にするか                           |
+| `GEMINI_API_KEY`      | Gemini APIキー                                    |
+| `ENABLE_AI_SUMMARY`   | AI要約を有効にするか                              |
+| `AI_PROVIDER`         | 使用するAIプロバイダー。現在は `dummy` / `gemini` |
+| `MAX_AI_SUMMARIES`    | AI要約する記事数の上限                            |
+| `REPORT_HOUR`         | レポート対象期間の基準時刻                        |
 
-`summarizer.py` では、`AI_PROVIDER` に応じてダミー要約またはGemini API要約を切り替えます。
-通常は `ENABLE_AI_SUMMARY = False` のため、生成AI APIは呼び出されません。
-`ENABLE_AI_SUMMARY=true` かつ `AI_PROVIDER=gemini` を設定し、`GEMINI_API_KEY` が存在する場合のみ、最新記事から指定件数分のGemini API要約を実行します。
+通常は、APIコストを避けるため `ENABLE_AI_SUMMARY=false` で運用します。
 
-`config.py` の以下の設定により、AI要約の有効化・利用プロバイダー・要約件数を制御する想定です。
+## ローカル実行
 
-```python
-ENABLE_AI_SUMMARY = get_bool_env("ENABLE_AI_SUMMARY", False)
-AI_PROVIDER = os.getenv("AI_PROVIDER", "dummy")
-MAX_AI_SUMMARIES = get_int_env("MAX_AI_SUMMARIES", 1)
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite")
+通常の実行は以下です。
+
+```powershell
+python main.py
 ```
 
-## 現在の構成
+日次実行用スクリプトを使う場合は以下です。
 
-```txt
-main.py
-  全体の実行入口です。RSS取得、分類、重要度判定、要約処理、Markdown生成、ファイル保存の流れを実行します。
-
-config.py
-  RSS情報源、取得記事数、1ソースあたりの記事数、AI要約設定などを管理します。
-
-fetch_rss.py
-  複数RSSから記事を取得し、重複除外・公開日時順ソートを行います。
-
-classifier.py
-  記事タイトルや出典をもとに、カテゴリ分類と重要度判定を行います。
-
-summarizer.py
-  現時点ではダミー要約を返します。将来的にGemini APIによる要約処理を実装する予定です。
-
-report_builder.py
-  記事一覧を重要度ごとに整理し、Markdown形式のレポート本文に変換します。
-
-report_writer.py
-  Markdownレポートを reports フォルダに日付付きファイルとして保存します。
-
-article_fetcher.py
-  記事URLへアクセスし、HTMLから本文らしきテキストを抽出します。
-
-reports/
-  実行時に生成される日次レポートを保存します。Git管理対象外です。
-
-examples/
-  GitHubで確認できるサンプル出力を保存します。
+```powershell
+.\run_daily_report.bat
 ```
 
-## サンプル出力
+`run_daily_report.bat` は実行ログを `logs/` に出力します。
 
-生成されるMarkdownレポートの例は `examples/sample_report.md` にあります。
+## GitHub Actionsでの自動実行
 
-## 次に追加したいこと
+GitHub Actionsで毎朝8時に自動実行します。
 
-- 本文抽出精度の改善
-- 本文取得対象サイトごとの調整
-- Gemini API利用時のエラー処理改善
-- 毎朝の自動実行
+GitHub ActionsのcronはUTC基準です。日本時間8:00に実行するため、workflowでは以下のcronを設定しています。
+
+```yaml
+schedule:
+  - cron: "0 23 * * *"
+```
+
+Slack通知を行うため、GitHubリポジトリのSecretsに以下を登録します。
+
+```text
+SLACK_WEBHOOK_URL
+```
+
+手動実行もできるように、workflowには `workflow_dispatch` を設定しています。
+
+```text
+Actions
+→ Daily AI Trend Report
+→ Run workflow
+```
+
+## 出力
+
+Markdownレポートは `reports/` に生成されます。
+
+```text
+reports/YYYY-MM-DD.md
+```
+
+`reports/` は実行時に生成される出力先のため、Git管理対象外です。
+
+サンプル出力は `examples/` に配置します。
+
+## Slack通知
+
+Slackには、選定された記事とSource Statusを投稿します。
+
+主な表示内容は以下です。
+
+- 本日のピックアップ件数
+- 記事タイトル
+- source
+- category
+- importance
+- selection reason
+- 元記事リンク
+- summary
+- Source Status
+
+## 現在のAI利用方針
+
+現時点では、APIコストを避けるためAI要約はデフォルトでOFFにしています。
+
+```env
+ENABLE_AI_SUMMARY=false
+AI_PROVIDER=dummy
+```
+
+将来的にはGemini APIを使って、以下を段階的に改善する予定です。
+
+- 要約
+- AI関連判定
+- 重要度判定
+- Slack掲載判断
+- 技術面 / ビジネス面の分類
+
+## 今後の改善予定
+
+- Gemini APIによる要約精度の改善
+- AI関連判定の精度向上
+- 重要度判定ロジックの改善
+- Slack表示のさらなる整理
+- 情報源ごとの取得安定性向上
