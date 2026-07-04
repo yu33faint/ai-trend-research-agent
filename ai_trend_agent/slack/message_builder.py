@@ -72,11 +72,11 @@ def build_slack_message(articles, source_statuses):
                     summary = "要約はまだ生成されていません。"
 
                 lines.append(f"*{index}. {article['title']}*")
-                lines.append(f"- source: {article['source']}")
-                lines.append(f"- category: {article['category']}")
-                lines.append(f"- importance: {article['importance']}")
-                lines.append(f"- reason: {article.get('selection_reason', '選定理由は未設定です。')}")
-                lines.append(f"- link: <{article['url']}|元記事を開く>")
+                lines.append(f"source: {article['source']}")
+                lines.append(f"category: {article['category']}")
+                lines.append(f"importance: {article['importance']}")
+                lines.append(f"reason: {article.get('selection_reason', '選定理由は未設定です。')}")
+                lines.append(f"link: <{article['url']}|元記事を開く>")
                 lines.append("")
                 lines.append("*summary*")
                 lines.append(summary)
