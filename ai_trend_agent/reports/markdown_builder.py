@@ -1,4 +1,4 @@
-def build_markdown_report(articles):
+def build_markdown_report(articles, source_statuses):
     lines = []
 
     lines.append("# AI Trend Daily Report")
@@ -47,5 +47,18 @@ def build_markdown_report(articles):
             lines.append("#### summary")
             lines.append("")
             lines.append(article["summary"])
+
+    lines.append("")
+    lines.append("## Source Status")
+    lines.append("")
+
+    for source_status in source_statuses:
+        source = source_status["source"]
+        count = source_status["count"]
+
+        if source_status["has_articles"]:
+            lines.append(f"- {source}: {count}件")
+        else:
+            lines.append(f"- {source}: 0件 (対象期間内の記事なし)")
 
     return "\n".join(lines)

@@ -37,7 +37,7 @@ def select_slack_articles(articles, max_count):
     return selected_articles[:max_count]
 
 
-def build_slack_message(articles):
+def build_slack_message(articles, source_statuses):
     lines = []
     lines.append("*AI Trend Daily Report*")
     lines.append(f"本日のピックアップ: {len(articles)}件")
@@ -45,40 +45,48 @@ def build_slack_message(articles):
 
     if not articles:
         lines.append("本日の重要記事は見つかりませんでした。")
-        return "\n".join(lines)
-
-    sections = [
-        ("high", "High Priority"),
-        ("medium", "Medium Priority"),
-    ]
-
-    for importance, section_title in sections:
-        section_articles = [
-            article for article in articles
-            if article.get("importance") == importance
+        lines.append("")
+    else:
+        sections = [
+            ("high", "High Priority"),
+            ("medium", "Medium Priority"),
         ]
 
-        if not section_articles:
-            continue
+        for importance, section_title in sections:
+            section_articles = [
+                article for article in articles
+                if article.get("importance") == importance
+            ]
 
-        lines.append(f"*{section_title}*")
-        lines.append("")
+            if not section_articles:
+                continue
 
-        for index, article in enumerate(section_articles, start=1):
-            summary = article.get("summary", "要約は未生成です。")
-
-            if summary == "要約は未生成です。":
-                summary = "要約はまだ生成されていません。"
-
-            lines.append(f"*{index}. {article['title']}*")
-            lines.append(f"- source: {article['source']}")
-            lines.append(f"- category: {article['category']}")
-            lines.append(f"- importance: {article['importance']}")
-            lines.append(f"- reason: {article.get('selection_reason', '選定理由は未設定です。')}")
-            lines.append(f"- link: <{article['url']}|元記事を開く>")
+            lines.append(f"*{section_title}*")
             lines.append("")
-            lines.append("*summary*")
-            lines.append(summary)
-            lines.append("")
+
+            for index, article in enumerate(section_articles, start=1):
+                summary = article.get("summary", "要約は未生成です。")
+
+                if summary == "要約は未生成です。":
+                    summary = "要約はまだ生成されていません。"
+
+                lines.append(f"*{index}. {article['title']}*")
+                lines.append(f"- source: {article['source']}")
+                lines.append(f"- category: {article['category']}")
+                lines.append(f"- importance: {article['importance']}")
+                lines.append(f"- reason: {article.get('selection_reason', '選定理由は未設定です。')}")
+                lines.append(f"- link: <{article['url']}|元記事を開く>")
+                lines.append("")
+                lines.append("*summary*")
+                lines.append(summary)
+                lines.append("")
+
+    lines.append("*Source Status*")
+
+    for source_status in source_statuses:
+        source = source_status["source"]
+        count = source_status["count"]
+
+        lines.append(f"- {source}: {count}件")
 
     return "\n".join(lines)

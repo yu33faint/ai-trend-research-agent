@@ -13,6 +13,7 @@ from ai_trend_agent.sources.article_fetcher import fetch_article_content
 from ai_trend_agent.slack.notifier import send_slack_message
 from ai_trend_agent.slack.message_builder import build_slack_message, select_slack_articles
 from ai_trend_agent.processing.report_window import get_report_window, is_in_report_window
+from ai_trend_agent.reports.source_status import build_source_status
 
 
 def main():
@@ -40,14 +41,15 @@ def main():
             article["content_length"] = len(content)
             article["summary"] = summarize_article(article)
 
-    report = build_markdown_report(articles)
+    source_statuses = build_source_status(articles)
+    report = build_markdown_report(articles, source_statuses)
     report_path = save_report(report)
 
     print(report)
     print(f"Report saved to: {report_path}")
 
     if ENABLE_SLACK_NOTIFY:
-        slack_message = build_slack_message(slack_articles)
+        slack_message = build_slack_message(slack_articles, source_statuses)
         send_slack_message(slack_message)
 
 
