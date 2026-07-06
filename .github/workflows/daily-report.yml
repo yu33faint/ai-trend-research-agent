@@ -13,8 +13,9 @@ jobs:
       ENABLE_SLACK_NOTIFY: "true"
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      ENABLE_AI_SUMMARY: "false"
-      AI_PROVIDER: "dummy"
+      ENABLE_AI_SUMMARY: "true"
+      AI_PROVIDER: "gemini"
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       MAX_AI_SUMMARIES: "1"
       REPORT_HOUR: "8"
 
