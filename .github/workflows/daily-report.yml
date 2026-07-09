@@ -16,7 +16,7 @@ jobs:
       ENABLE_AI_SUMMARY: "true"
       AI_PROVIDER: "gemini"
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      MAX_AI_SUMMARIES: "1"
+      MAX_AI_SUMMARIES: "6"
       REPORT_HOUR: "8"
 
     steps:

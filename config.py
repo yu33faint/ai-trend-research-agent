@@ -66,20 +66,20 @@ HTTP_HEADERS = {
     "User-Agent": "AI-Trend-Research-Agent/0.1"
 }
 
-# AI settings
-ENABLE_AI_SUMMARY = get_bool_env("ENABLE_AI_SUMMARY", False)
-AI_PROVIDER = os.getenv("AI_PROVIDER", "dummy")
-GEMINI_MODEL = "gemini-3.1-flash-lite"
-MAX_SAFE_AI_SUMMARIES = 1
-MAX_AI_SUMMARIES = min(
-    get_int_env("MAX_AI_SUMMARIES", 1),
-    MAX_SAFE_AI_SUMMARIES,
-)
-
 # Slack settings
 SLACK_WEBHOOK_URL = os.getenv("SLACK_WEBHOOK_URL", "")
 ENABLE_SLACK_NOTIFY = get_bool_env("ENABLE_SLACK_NOTIFY", False)
 MAX_SLACK_ARTICLES = 6
+
+# AI settings
+ENABLE_AI_SUMMARY = get_bool_env("ENABLE_AI_SUMMARY", False)
+AI_PROVIDER = os.getenv("AI_PROVIDER", "dummy")
+GEMINI_MODEL = "gemini-3.1-flash-lite"
+MAX_SAFE_AI_SUMMARIES = MAX_SLACK_ARTICLES
+MAX_AI_SUMMARIES = min(
+    get_int_env("MAX_AI_SUMMARIES", MAX_SAFE_AI_SUMMARIES),
+    MAX_SAFE_AI_SUMMARIES,
+)
 
 # Report window
 REPORT_HOUR = get_int_env("REPORT_HOUR", 8)
