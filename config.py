@@ -83,3 +83,7 @@ MAX_SLACK_ARTICLES = 6
 
 # Report window
 REPORT_HOUR = get_int_env("REPORT_HOUR", 8)
+
+# AI classification settings
+ENABLE_AI_CLASSIFICATION = get_bool_env("ENABLE_AI_CLASSIFICATION", False)
+AI_CLASSIFICATION_CHUNK_SIZE = get_int_env("AI_CLASSIFICATION_CHUNK_SIZE", 30)

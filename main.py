@@ -2,7 +2,7 @@ from ai_trend_agent.sources.rss import fetch_articles
 from ai_trend_agent.reports.markdown_builder import build_markdown_report
 from ai_trend_agent.reports.writer import save_report
 from ai_trend_agent.processing.summarizer import summarize_article
-from ai_trend_agent.processing.classifier import classify_article, judge_importance
+from ai_trend_agent.processing.ai_classifier import classify_articles
 from config import (
     ENABLE_AI_SUMMARY,
     MAX_AI_SUMMARIES,
@@ -32,9 +32,7 @@ def main():
         if is_ai_related(article)
     ]
 
-    for article in ai_articles:
-        article["category"] = classify_article(article)
-        article["importance"] = judge_importance(article)
+    classify_articles(ai_articles)
 
     slack_articles = select_slack_articles(ai_articles, MAX_SLACK_ARTICLES)
 
